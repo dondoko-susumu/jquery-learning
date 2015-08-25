@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>scroll</title>
+		<script src="jquery-2.1.4.js"></script>
+	</head>
+	<body>
+		<style>
+			#message {position:fixed; left:20px; top:50px;padding:5px;
+			border: 1px solid black; width:12em;}
+			#message p { margin:3px; padding 0; white-space: nowrap; }
+		</style>
+		<h4>scroll JQuery入門 P.242</h4>
+		<div id="message">
+			<p>画面サイズ(window)x:<span id="win-width"></span>,y:<span id="win-height"></span></p>
+			<p>スクロール(scroll)x:<span id="scroll-left"></span>,y:<span id="scroll-top"></span></p>
+			<p>表示位置(offset)x:<span id="offset-left"></span>,y:<span id="offset-top"></span></p>
+		</div>
+	<script>
+		var win = $(window);
+		var message = $('#message');
+		var winWidth = $('#win-width');
+		var winHeight = $('#win-height');
+		var scrollLeft = $('#scroll-left');
+		var scrollTop = $('#scroll-top');
+		var offsetLeft = $('#offset-left');
+		var offsetTop = $('#offset-top');
+
+		$(document.body).width(win.width() * 2.5).height(win.height() * 2.5);
+
+		win.resize(function(){
+			winWidth.text(win.width());
+			winHeight.text(win.height());
+		}).scroll(function(){
+			var offset = message.offset();
+			scrollLeft.text(win.scrollLeft());
+			scrollTop.text(win.scrollTop());
+			offsetLeft.text(offset.left);
+			offsetTop.text(offset.top);
+		}).resize().scroll();
+	</script>
+	</body>
+</html>
