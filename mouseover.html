@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>mouseover</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+</head>
+<body>
+<p>JQuery本格入門 P.230</p>
+<style>
+	div {float: left; margin: 35px; padding: 5px; border: 1px dashed black;}
+	.parent {width: 200px; }
+	.child {width: 120px; height: 100px;}
+	.log {margin-top: 0; border: none;}
+	.log h4 {margin: 0 0 5px;}
+	.log p {margin: 3px;}
+</style>
+<div id="parent-first" class="parent">
+	<strong>mouseover / mouseout</strong>
+	<div id="child-first" class="child"></div>
+</div>
+<div id="parent-last" class="parent">
+	<strong>mouseenter / mouseleave</strong>
+	<div id="child-last" class="child"></div>
+</div>
+<div class="log">
+	<h3>実行されたイベント処理</h3>
+</div>
+<script>
+$(function(){
+	var eventLog = function(ev) {
+		$('<p>',{text:ev.type + ': '+ this.id}).appendTo('.log');
+	};
+
+	$('.parent:first, .child:first').mouseover(eventLog).mouseout(eventLog);
+	$('.parent:last, .child:last').mouseenter(eventLog).mouseleave(eventLog);
+
+});
+</script>
+</body>
+</html>

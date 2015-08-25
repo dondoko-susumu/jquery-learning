@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>Event/keydown</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+</head>
+<body>
+<p>JQuery本格入門 P.237</p>
+<style>
+	.log {margin-top: 0; border: none;}
+	.log h4 {margin: 0 0 5px;}
+	.log p {margin: 3px;}
+</style>
+<div>
+	<input type="text" size="10" />
+	<input type="checkbox" />return false;
+	<input type="button" value="クリア" />
+</div>
+<div class="log">
+	<h3>実行されたイベント処理</h3>
+</div>
+<script>
+$(function(){
+	var text = $('input[type="text"]');
+	var checkbox = $('input[type="checkbox"]');
+	var button = $('input[type="button"]');
+	var log = $('.log');
+
+	var handler = function(ev) {
+		var charCode = ev.charCode > 20 ? String.fromCharCode(ev.charCode) :
+										  ev.charCode;
+		
+		$('<p>',{text: ev.type + ': keyCode = ' + ev.keyCode +
+					   ', ev.charCode = ' + ev.charCode +
+					   ', charCode = ' + charCode}).appendTo(log);
+
+		return !checkbox.prop('checked');
+		//return true;
+	};
+
+	text.keydown(handler).keypress(handler).keyup(handler);
+
+	checkbox.change(function() {
+		text.focus();
+	});
+
+	button.click(function() {
+		log.find('p').remove();
+		text.val('').focus();
+	}).click();
+
+});
+</script>
+</body>
+</html>

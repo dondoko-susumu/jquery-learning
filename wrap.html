@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>wrap</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<script>
+$(function(){
+	// リンク先と表示色のデータを保存
+	$('span:first').data({link:'http://jquery.com/',color:'red'});
+	$('span:last').data({link:'http://jqueryui.com/',color:'green'});
+
+	// <a>を<span>の親要素として追加
+	$('span').wrap(function(){
+		return $('<a>',{href:$(this).data('link'),
+			css:{textDecoration:'none',margin:10}});
+		});
+
+	// <a>と<span>の間に<strong>を追加
+	$('a').wrapInner(function(idx) {
+		var clr = $('span').eq(idx).data('color');
+		console.log(clr);
+		return $('<strong>',{css:{color:$('span').eq(idx).data('color')}});
+		});
+
+});
+</script>
+</head>
+<body>
+<span>jQuery</span>
+<span>jQuery UI</span>
+</body>
+</html>
