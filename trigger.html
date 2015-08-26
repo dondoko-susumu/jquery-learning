@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>Event/trigger</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+</head>
+<body>
+<p>JQuery本格入門 P.258</p>
+<div id="parent">
+	<form>
+		<input name="now" type="hidden" />
+	</form>
+</div>
+<div id="btns"></div>
+<script>
+$(function(){
+	var ary = ['フォームは送信されるかな?','現在時刻を更新しますか?'];
+	var obj = {msg1: 'フォームは送信されるかな？', msg2: '現在時刻は更新しますか?'};
+
+	$('<p>',{text:location.search.sice(1)}).appendTo('#parent');
+
+	$('#parent').submit(function(ev,msg1,msg2){
+		return confirm(ev.msg2 || msg2);
+	});
+
+	$('form').submit(function(ev){
+		$('<p>',text{})
+	});
+});
+</script>
+</body>
+</html>
