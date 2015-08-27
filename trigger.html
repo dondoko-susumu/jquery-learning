@@ -18,15 +18,24 @@ $(function(){
 	var ary = ['フォームは送信されるかな?','現在時刻を更新しますか?'];
 	var obj = {msg1: 'フォームは送信されるかな？', msg2: '現在時刻は更新しますか?'};
 
-	$('<p>',{text:location.search.sice(1)}).appendTo('#parent');
+	$('<p>',{text:location.search.slice(1)}).appendTo('#parent');
 
 	$('#parent').submit(function(ev,msg1,msg2){
 		return confirm(ev.msg2 || msg2);
 	});
 
 	$('form').submit(function(ev){
-		$('<p>',text{})
+		$('<p>',{text:ev.msg1}).appendTo('#parent');
+		$('form :hidden').val($.now());
 	});
+
+	$('<input>',{type:'button',val:'trigger',click: function(){
+		$('form').trigger('submit',ary);
+	}}).appendTo('#btns');
+
+	$('<input>',{type:'button',val:'triggerHandler',click:function(){
+		console.log($('form').triggerHandler($.extend({type:'submit'},obj)))
+	}}).appendTo('#btns');
 });
 </script>
 </body>
