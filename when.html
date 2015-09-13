@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>when</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<script>
+$(function(){
+
+	//$.when P.285
+	var d = new Date();
+	$.when(d.getHours(),d.getMinutes()).done(function(h,m){
+		$('<p>',{text:h+':'+m}).appendTo(document.body);
+	});
+
+
+	//P.285
+	$.each(['red','blue'],function(i,name){
+		$('<div>',{width:100,height:100,css:{backgroundColor:name,color:'white',fontWeight:'bold'}})
+			.appendTo(document.body).hide();
+	});
+
+	$.when($('div:first').show(3000),$('div:last').show(300))
+		.done(function(){
+			$('div').text('jQuery');
+		});
+
+
+
+});
+</script>
+</head>
+<body>
+<h4>jQuery入門 P.285 Deferred/promise/when </h4>
+</body>
+</html>

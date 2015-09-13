@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>when P.283 アニメーションバー</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<script>
+$(function(){
+
+	//$.when P.283 
+	var step = 36,radStep = Math.PI / step, r = 0,
+	    maxWidth = $(window).width() * 0.98, maxHeight = $(window).height() * 0.9,
+	    barWidth = maxWidth / step;
+
+	var graph = $('<div>', {width: maxWidth, height:maxHeight,
+	                       offset: {left: 0, top: 0}}).appendTo(document.body);
+
+	var css = {width: barWidth, bottom: 0, backgroundColor: 'gold',
+	           display: 'none', position: 'absolute'};
+
+	while(step--) {
+		var height = Math.sin(r) * maxHeight;
+		$('<div>',{css:$.extend({height:height,
+		           right:(step+1)*barWidth},css),class:'bar'})
+			.appendTo(graph);
+		r += radStep;
+	}
+
+	$('.bar').each(function(){
+		$(this).delay(Math.random()*1000).slideDown(300);
+	}).promise().done(function(){
+		alert(this.length + 'のバーでグラフを描画しました');
+	});
+
+});
+</script>
+</head>
+<body>
+<h4>jQuery入門 P.283 Deferred/promise/when アニメーションバー</h4>
+</body>
+</html>

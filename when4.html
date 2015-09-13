@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>when P.287 リスト7-48 $.whenにおけるprogress </title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<script>
+$(function(){
+
+	//$.when P.287 リスト7-48 $.whenにおけるprogress
+
+	var i = 4,defs =[];
+
+	// 1秒後,2秒後,3秒後に状態が遷移するDeferredオブジェクトをそれぞれ生成
+	while(--i>0){
+		var def = $.Deferred(),seconds = i * 1000;
+
+		// 状態遷移後に実行する処理
+		def.progress(function(times){ //nofifyにて実行
+			$('<div>',{text:times+'つめのdef.progress'}).appendTo('body');
+		}).done(function(times){ //resolveにて実行
+			$('<div>',{text:times+'つめのdef.done'}).appendTo('body');
+		});
+
+		defs.unshift(def); //$.when実行用（引数はPromiseオブジェクトも可）
+
+		//状態遷移の実行時刻を設定（１秒後、２秒後、３秒後）
+		setTimeout((function(def,times) {return function(){
+		  def.notify(times).resolve(times);
+		};})(def,i),seconds);
+	}
+
+	//defs=[1秒後に状態が遷移するDeferredオブジェクト,2秒後に...,3秒後に...]
+
+	// $.when()におけるprogressの処理
+	// 引数に設定したDeferred(Promise)オブジェクトのnotify / notifyWith
+	// が実行されると、progressに登録された処理が実行される
+
+	// (js文法)applyはwhen()の引数を配列(defs)で渡している
+	$.when.apply($,defs).progress(function() {
+		//console.log(arguments);
+		var args = Array.prototype.slice.call(arguments,0); //表示用
+		//console.log(args);
+
+	// (js文法)Array.prototype.slice.callの意味
+	// arguments(これはnodelistみたいなオブジェクト)をArray型に変換するため
+	//http://lealog.hateblo.jp/entry/2014/02/07/012014
+
+		var times, i = arguments.length;
+		while(!(times = arguments[--i])); //null (undefined) でない引数を探す
+		$('<div>',{text:times+'つめの$.when().progress / 引数: '+
+		                JSON.stringify(args)}).appendTo('body');
+	}).then(function(){
+		var args = Array.prototype.slice.call(arguments,0); //表示用
+		$('<div>',{text:'最後の$.when().then / 引数: '+
+		                JSON.stringify(args)}).appendTo('body');
+		return '$.when()の引数はすべてresolved';
+	}).done(function(s){
+		$('<div>',{text:'最後の$.when().done / ' + s}).appendTo('body');
+	});
+
+});
+</script>
+</head>
+<body>
+<h4>jQuery入門 P.287 Deferred/promise/when </h4>
+<p>$.when P.287 リスト7-48 $.whenにおけるprogress</p>
+</body>
+</html>
