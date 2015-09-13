@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>then</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<script>
+$(function(){
+	//p.280
+
+	//then()
+	// 第１引数：関数１：resolvedでの処理（doneで登録した関数の前に実行される）
+	// 第２引数：関数２：rejectedでの処理（failで登録した関数の前に実行される）
+	// 第３引数：関数３：notifyが実行されたときの処理(notifyで登録した関数の前に実行される)
+	// 戻り値：promiseオブジェクト。そのためメソッドチェーンで続けてresolve,reject,notify
+	//         実行できない。
+
+	var thenHandler=function(s){
+		return 'then -> ' + s;
+	};
+	var stateHandler=function(s){
+		return s + ' / state: ' + this.state();
+	};
+	var finHandler=function(s){
+		$('<div>',{text:s}).appendTo(document.body);
+	};
+
+	var d = $.Deferred();
+
+	d.then(thenHandler,thenHandler,thenHandler)
+	 .then(stateHandler,stateHandler,stateHandler)
+	 .done(finHandler).fail(finHandler).progress(finHandler);
+
+	d.resolve('resolved');
+
+});
+</script>
+</head>
+<body>
+<h4>jQuery入門 P.280 Deferred/then </h4>
+</body>
+</html>

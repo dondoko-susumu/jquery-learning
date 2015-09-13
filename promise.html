@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>promise</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<script>
+$(function(){
+
+	//promise P.280
+	//Deferredから状態を遷移させるメソッド(resolve,reject,notify)を除いたサブセット
+	//状態を遷移させる処理を先に行い、状態に応じた処理の登録を別の処理に委ねるため
+	//Promiseというオブジェクトが用意されている。
+
+	//p.281
+	function handler(s) { alert(s); }
+	function through(s) { return s; }
+
+	// メソッドチェーンでresolveを実行できる
+	$.Deferred().done(handler).resolve('JQuery');
+
+	// メソッドチェーンではresolveを実行できない -> thenの戻り値はPromiseオブジェクトのため
+	//$.Deferred().then(trough).done(handler).resolve('JQuery');
+
+	// Deferredオブジェクトに対してならresolveを実行できる
+	var deferred = $.Deferred();
+	deferred.then(through).done(handler);
+	deferred.resolve('jQuery');
+
+});
+</script>
+</head>
+<body>
+<h4>jQuery入門 P.281 Deferred/promise </h4>
+</body>
+</html>

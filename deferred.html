@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>deferred</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<script>
+$(function(){
+	//p.275
+	var deferred = $.Deferred();
+
+	//done -> resolved の処理を登録
+	deferred.done(function() {
+		// 解決済み(resolved)に遷移したら実行される処理を登録
+		alert('done,state:'+deferred.state());
+
+	}).fail(function(){ //fail -> rejectedの処理を登録
+		// 棄却済み(rejected)に遷移したら実行される処理を登録
+		alert('fail,state:'+deferred.state());
+
+	}).progress(function(){ //状態が遷移する前に実行される処理を登録
+		// 保留(pending)のままで実行する処理を登録
+		alert('progress,state:'+deferred.state());
+	});
+
+	switch($.now() % 3) {
+		case 0:
+			deferred.resolve(); //状態がresolvedに遷移される
+			break;
+		case 1:
+			deferred.reject(); //状態がrejectedに遷移される
+			break;
+		default:
+			deferred.notify(); //状態は保留(pending)のまま
+	}
+
+});
+</script>
+</head>
+<body>
+<h4>jQuery入門 P.275 deferred </h4>
+</body>
+</html>
