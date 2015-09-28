@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>ajax P.339 リスト7-18 $.ajaxでCSV</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<script>
+$(function(){
+
+  //ajax P.339 リスト7-18 $.ajaxでCSV
+
+  //CSV形式のデータから二次元配列を生成する関数（row[0][0]=='名称'）
+  //(正規表現は"〜"内のカンマや""などを考慮していない簡易版)
+  var csvConverter = function(text) {
+    var rows = [];
+    $.each(text.split(/\r?\n/),function(idx,line){
+      var row = [];
+      if(!line.length) return;
+      $.each(line.split(/\,/),function(idx,column){
+        row.push(column.replace(/^"?|"?$/g,''));
+      });
+      rows.push(row);
+    });
+    return rows;
+  };
+
+  // CSV形式のファイルを読み込み
+  $.ajax('csvcontent.csv',{
+    dataType:'csv',
+    converters: {
+      'text csv':csvConverter // テキストをCSVとみなして２次元配列を生成
+    },
+    success: function(rows){ // rowsは生成済みの２次元配列
+      var table = $('<table>').appendTo(document.body);
+      $.each(rows,function(rIdx,row){
+        var tr = $('<tr>').appendTo(table);
+        $.each(row,function(cIdx,column){
+          if(rIdx==0){
+            $('<th>',{text:column}).appendTo(tr);
+          } else {
+            $('<td>',{text:column,css:{textAlign:isNaN(column) ? 'left':'right'}}).appendTo(tr);
+          }
+        });
+      });
+    }
+  });
+});
+</script>
+</head>
+<body>
+<h4>ajax P.339 リスト7-18 $.ajaxでCSV</h4>
+</body>
+</html>
