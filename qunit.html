@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>QUnit P.380</title>
+    <link rel="stylesheet" href="//code.jquery.com/qunit/qunit-1.19.0.css">
+  </head>
+  <body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+    <script src="//code.jquery.com/qunit/qunit-1.19.0.js"></script>
+    <script>
+      function isOdd(num) { return num % 2; }
+      function plus(a, b) { return a + b; }
+
+      test('合否の判定(1)', function(){
+        ok(isOdd(5),'5は奇数である');
+        equal(plus(2, 3), '5' ,'2 + 3 == "5"');
+        notEqual(plus(2, 3), '5', '2 + 3 != "5"');
+        strictEqual(plus(2, 3), '5', '2 + 3 === "5"');
+        notStrictEqual(plus(2, 3), '5', '2 + 3 !== "5"');
+      });
+    </script>
+  </body>
+</html>
