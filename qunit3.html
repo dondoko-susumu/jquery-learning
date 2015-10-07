@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>QUnit P.387 Ajax:非同期通信テスト</title>
+    <link rel="stylesheet" href="//code.jquery.com/qunit/qunit-1.19.0.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+  </head>
+  <body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+    <script src="//code.jquery.com/qunit/qunit-1.19.0.js"></script>
+    <script>
+      // モジュールの設定（以下のテストはすべてこのモジュールに属する）
+      module('Google Feed APIでRSSにアクセス',{
+        setup:function() {
+          this.url = 'https://ajax.googleapis.com/ajax/services/feed/load?callback=?';
+          this.defaultParams = {v: '1.0'};
+        },
+        run: function(title, type, data) { // 受信結果に対するテスト 引数のtitle,typeは$.proxyで設定
+          expect(4);
+
+          ok(data && data.responseData && data.responseData.feed.entries,'結果を受信した');
+
+          strictEqual(data.responseData.feed.title,title,'タイトルは「' + title + '」である');
+
+          strictEqual(data.responseData.feed.type, type,'フィールドの種類は'+ type + 'である');
+
+          equal(data.responseData.feed.entries.length,
+            $.grep(data.responseData.feed.entries,function(entry){
+              return entry.title && entry.link && entry.content;
+            }).length,
+            'フィードが存在した');
+          start();
+        },
+        teardown:function() {
+          if (this.url) delete this.url;
+          if (this.defaultParams) delete this.defaultParams;
+        }
+      });
+
+      asyncTest('gihyo.jp総合のRSS2.0を受信',function(){
+        $.getJSON(this.url,
+                  $.extend({q: 'http://gihyo.jp/feed/rss2'}, this.defaultParams))
+          .done($.proxy(this,'run','gihyo.jp：総合','rss20'));
+      });
+
+      asyncTest('同DEVELOPER STAGEのRSS2.0を受信',function(){
+        $.getJSON(this.url,
+                  $.extend({q: 'http://gihyo.jp/dev/feed/rss2'}, this.defaultParams))
+          .done($.proxy(this,'run','gihyo.jp','rss20'));
+      });
+    </script>
+  </body>
+</html>

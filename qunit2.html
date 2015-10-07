@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>QUnit P.385 Ajax同期通信テスト</title>
+    <link rel="stylesheet" href="//code.jquery.com/qunit/qunit-1.19.0.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+  </head>
+  <body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+    <script src="//code.jquery.com/qunit/qunit-1.19.0.js"></script>
+    <script>
+      // テスト対象の関数（Ajax同期通信{async:false}）
+      function jsonCall(url, params) {
+        var result;
+
+        //Ajax同期通信(通信が終わるかタイムアウトになるまで次に進まない)
+        $.ajax({url: url, data: params, dataType: 'json', async: false,
+                success:function(data){result = data;}});
+        return result;
+      }
+
+      // モジュールの設定（以下のテストはすべてこのモジュールに属する）
+      module('Webアプリにアクセス',{
+        setup:function() {this.url = 'json.php';},
+        teardown:function() {if (this.url) delete this.url}
+      });
+
+      // パラメータname=webtechを送信して結果を確認するテスト
+      test('webtechで検索',2,function(){
+        var result = jsonCall(this.url,{name: 'webtech'});
+
+        // 結果を受信できていれば合格
+        ok(result && result.response,'結果を受信できた');
+        // 受信した内容が正しければ合格
+        deepEqual(result.response,
+                  {name: 'webtech', tech: ['HTML','CSS','JavaScript']},
+                  'webtechによる検索結果');
+      });
+
+      // パラメータname=jQueryを送信して結果を確認するテスト
+      test('jQueryで検索',2,function(){
+        var result = jsonCall(this.url,{name: 'jQuery'});
+
+        // 結果を受信できていれば合格
+        ok(result && result.response,'結果を受信できた');
+        // 受信した内容が正しければ合格
+        deepEqual(result.response,
+                  {name: 'jQuery', tech: ['jQuery','jQuery UI']},
+                  'jQueryによる検索結果');
+      });
+
+      // パラメータname=JavaScriptを送信して結果を確認するテスト
+      test('JavaScriptで検索',2,function(){
+        var result = jsonCall(this.url,{name: 'JavaScript'});
+
+        // 結果を受信できていれば合格
+        ok(result && result.response,'結果を受信できた');
+        // 受信した内容が正しければ合格
+        deepEqual(result.response,
+                  {name: 'JavaScript', tech: []},
+                  'JavaScriptによる検索結果');
+      });
+    </script>
+  </body>
+</html>
