@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="Shift_JIS" />
+    <title>P.345 JSONPによるRSSの読込</title>
+    <style>
+      a       { padding: 3px; text-decoration: none; }
+      a:hover { background-color: #ffa; }
+      table   { margin-top: 5px; }
+      tr:nth-of-type(odd) { background-color: #eee; }
+      td      { padding: 5px; }
+      td.date { white-space: nowrap;
+                vertical-align: top; text-align: right; }
+    </style>
+
+    <script id="feed-layout" type="text/x-jsrender">
+      <div>
+        <h3>{{>title}}</h3>
+        <small>{{>description}}</small>
+        <table>
+          {{for entries}}
+            {{include tmpl="#feed-items"/}}
+          {{/for}}
+        </table>
+      </div>
+    </script>
+
+    <script id="feed-items" type="text/x-jsrender">
+      <tr><td><a target="_blank" href="{{:link}}">{{>title}}</a></td>
+          <td class="date">{{date:publishedDate}}</td></tr>
+    </script>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script src="jsrender.js"></script>
+  </head>
+
+  <body>
+    <script>
+      var url = 'https://ajax.googleapis.com/ajax/services/feed/load';
+      var feed = 'http://gihyo.jp/feed/rss2';
+      var params = {v: '1.0', num: 5, q: feed};
+
+      $.views.converters('date',function(date){
+        return new Date(date).toLocaleString().replace(' ','<br />');
+      });
+
+/*
+      $.ajax(url, {
+        dataType: 'jsonp feed',
+        data:     params,
+        converters: {
+          'json feed': function(data) {
+            if(data && data.responseData && data.responseData.feed) {
+              return data.responseData.feed;
+            }
+            throw('nofeed');
+          }
+        },
+        success: function(feed) {
+          var html = $('#feed-layout').render(feed);
+          $(html).appendTo(document.body);
+        },
+        error: function(jqXHR, statusText, error) {
+          $('<div>フィードを受信できませんでした</div>').appendTo(document.body);
+        }
+      });
+*/
+      var url = 'https://ajax.googleapis.com/ajax/services/feed/load?callback=?';
+
+      $.getJSON(url, params, function(data){
+        if (data && data.responseData && data.responseData.feed) {
+          var html = $('#feed-layout').render(data.responseData.feed);
+          $(html).appendTo(document.body);
+        } else {
+          $('<div>フィードを受信できませんでした</div>').appendTo(document.body);
+        }
+      });
+    </script>
+  </body>
+</html>
+
