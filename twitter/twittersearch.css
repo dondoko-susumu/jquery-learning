@@ -1,7 +1,0 @@
-#twitter-search-result p { margin: 5px 0; padding: 5px; line-height: 1.2em; }
-#twitter-search-result p.tweet:nth-child(2n+1) {background-color: Paleturquoise; }
-#twitter-search-result .query { color: red; font-weight: bold; }
-#twitter-search-result .query-list {}
-#twitter-search-result .query-list a { margin-right:0.5em;}
-#twitter-search-result .paginate { border-bottom:1px solid gray; }
-#twitter-search-result .paginate a { margin-right:0.5em; }

@@ -1,7 +1,0 @@
-2015/11/04
-
-https://twitteroauth.com/
-
-composer require abraham/twitteroauth
-
-
