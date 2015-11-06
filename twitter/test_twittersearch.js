@@ -162,7 +162,7 @@ jQuery(function($){
         'キーワードリストが１つ追加された');
       deepEqual(queryList.find('a.search').map(function() {
         return $(this).text(); }).get(), [keyword],
-        'キーワードりうとはjQueryのみ');
+        'キーワードリストはjQueryのみ');
 
       deepEqual(paginate.find('a').map(function(){
         return [[this.className,$(this).text()]]; }).get(),
@@ -172,6 +172,32 @@ jQuery(function($){
       equal(result.find('p.tweet').length,
         form.find('[name=count]').val(),
         '表示されるつぶやきの数はフォームで設定した値と同じ');
+      start();
+    },3000);
+  });
+
+  asyncTest('2ページ目', function(){
+    var form = this.form;
+    var result = this.result;
+    var paginate = this.paginate;
+    var cache = TwitterSearch.cache;
+
+    ok(cache.search_metadata.since_id === 0,'現在１ページ目');
+
+    paginate.find('a.next').click();
+
+    setTimeout(function(){
+      ok(TwitterSearch.cache.search_metadata.max_id < cache.search_metadata.max_id,'2ページ目');
+      notDeepEqual(cache.statuses,TwitterSearch.cache.statuses,'つぶやきの内容が変化している');
+
+      deepEqual(paginate.find('a').map(function(){
+        return [[this.className,$(this).text()]]; }).get(),
+        [['update','更新'],['next','次へ \u00bb']],
+        'ページ送りのリンクは変化しない');
+      equal(result.find('p.tweet').length,
+        form.find('[name=count]').val(),
+        'つぶやきの数はフォームの設定と同じ');
+
       start();
     },3000);
   });

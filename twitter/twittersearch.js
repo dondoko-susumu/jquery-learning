@@ -19,7 +19,7 @@ var TwitterSearch;
           '&count=' + self.form.find('[name=count]').val());
       })
       .on('click','.next',function(){
-        if(self.cache) self.search(self.cache.search_metadata.next_page.slice(1));
+        if(self.cache) self.search(self.cache.search_metadata.next_results.slice(1));
       }).on('click','.search',function(){
         self.query.val($(this).text());
         self.search();
@@ -54,6 +54,10 @@ var TwitterSearch;
       if(data.search_metadata && data.search_metadata.refresh_url 
           && data.search_metadata.refresh_url.length > 1) {
         $('<a>',{class:'update',href:'javascript:void(0);',text: '更新'}).appendTo(paginate);
+      }
+      if(data.search_metadata && data.search_metadata.next_results 
+          && data.search_metadata.next_results.length > 1) {
+        $('<a>',{class:'next',href:'javascript:void(0);',text: '次へ \u00bb'}).appendTo(paginate);
       }
 
       if(data.statuses && data.statuses.length > 0) {
