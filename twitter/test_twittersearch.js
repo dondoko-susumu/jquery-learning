@@ -113,4 +113,66 @@ jQuery(function($){
       '<a target="_blank" href="http://jquery.com/">http://<span class="query">jquery</span>.com/</a>' ,
       'リンク内でもキーワード強調(外部サイト)');
   });
+
+  module('検索後の画面表示のテスト', {
+    setup: function(){
+      if (!TwitterSearch.view) TwitterSearch.init();
+      this.form = $('#twitter-search form');
+      this.result = $('#twitter-search-result');
+      this.queryList = this.result.find('.query-list');
+      this.paginate = this.result.find('.paginate');
+    },
+    teardown: function() {
+      delete this.form;
+      delete this.result;
+      delete this.queryList;
+      delete this.paginate;
+    }
+  });
+
+  test('検索する前', function() {
+    var result = this.result;
+    var queryList = this.queryList;
+    var paginate = this.paginate;
+
+    strictEqual(TwitterSearch.cache,null,
+      'データキャッシュはnull');
+    strictEqual(queryList.find('a.serch').length,0,
+      'キーワードリストのリンクは存在しない');
+    strictEqual(paginate.find('a').length,0,
+      'ページ送りのリンクは存在しない');
+    strictEqual(result.find('p.tweet').length,0,
+      'つぶやきは表示されていない');
+  });
+
+  asyncTest('最初の検索結果', function(){
+    var form = this.form;
+    var result = this.result;
+    var queryList = this.queryList;
+    var paginate = this.paginate;
+    var keyword = 'jQuery';
+
+    form.find('[name=q]').val(keyword);
+    TwitterSearch.search();
+
+    setTimeout(function(){
+      notStrictEqual(TwitterSearch.cache,null,
+        'データキャッシュはnullではなくなった');
+      equal(queryList.find('a').length,1,
+        'キーワードリストが１つ追加された');
+      deepEqual(queryList.find('a.search').map(function() {
+        return $(this).text(); }).get(), [keyword],
+        'キーワードりうとはjQueryのみ');
+
+      deepEqual(paginate.find('a').map(function(){
+        return [[this.className,$(this).text()]]; }).get(),
+        [['update','更新'],['next','次へ \u00bb']],
+        '「更新」「次へ」のリンクが追加された');
+
+      equal(result.find('p.tweet').length,
+        form.find('[name=count]').val(),
+        '表示されるつぶやきの数はフォームで設定した値と同じ');
+      start();
+    },3000);
+  });
 });

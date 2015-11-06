@@ -3,7 +3,7 @@ var TwitterSearch;
   TwitterSearch = {
     //url: 'twittersearch.php?callback=?',
     url: 'twittersearch.php',
-    cache: {},
+    cache: null,
 
     init: function() {
       this.view   = $('#twitter-search');
